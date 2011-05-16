@@ -14,27 +14,41 @@ SC2Browser.prototype = {
     this.window.connect ("hide", Gtk.main_quit);
 
     this.scrolled_window = new Gtk.ScrolledWindow ();
-    this.window.add (this.scrolled_window);
 
     var main_box = new Gtk.Box ({orientation: Gtk.Orientation.VERTICAL, spacing: 0});
-    this.scrolled_window.add (main_box);
+    this.window.add (main_box);
+
+    main_box.pack_start (this.scrolled_window, true, true, 0);
 
     // Initialize our browser.
     this.browser = new WebKit.WebView ();
     this.browser.load_uri('http://www.slashdot.org');
-    main_box.pack_start (this.browser, true, true, 0);
+    this.scrolled_window.add (this.browser, true, true, 0);
+
+    var button_box = new Gtk.HButtonBox();
+    main_box.pack_start(button_box, false, false, 0);
     
     // Add a 'stats' button.  When clicking this button, it will take
     // you to sc2ranks.com.
     var stats_button = new Gtk.Button ({label: "Stats"});
     stats_button.connect ("clicked", Lang.bind (this, this._statsClicked));
-    main_box.pack_start (stats_button, false, false, 0);
+    button_box.pack_start (stats_button, true, true, 0);
+
+    // Add a 'casts' button.  When clicking this button, it will take
+    // you to sc2casts.com.
+    var casts_button = new Gtk.Button ({label: "Casts"});
+    casts_button.connect ("clicked", Lang.bind (this, this._castsClicked));
+    button_box.pack_start (casts_button, true, true, 0);
     
     this.window.show_all ();
   },
   
   _statsClicked: function() {
     this.browser.load_uri('http://www.sc2ranks.com');
+  },
+
+  _castsClicked: function() {
+    this.browser.load_uri('http://sc2casts.com');
   }
 }
 
